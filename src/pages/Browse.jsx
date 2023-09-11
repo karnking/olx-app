@@ -45,24 +45,24 @@ const Browse = () => {
             <Input value={obj.name} onChange={(e)=>setObj({...obj,name:e.target.value})} />
             </Flex>
             {ads?.map(ad=>{
-                <Card>
-                <CardBody>
-                    <Flex justify={'space-between'} px='5'>
-                        <VStack textAlign={'left'}>
-                            <Heading fontSize={'18'}>{category}</Heading>
-                            <Text textAlign={'left'} fontSize={'13'}>{new Date(date).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year:'numeric`' })}</Text>
-                            <Text textAlign={'left'} fontSize={'13'}>{type.toUpperCase()}</Text>
-                        </VStack>
-                        <VStack>
-                            <Text textAlign={'left'} fontSize={'13'} color={type === 'Income' ? 'green' : 'red'}>{type === 'Income' ? `+${amount}` : `-${amount}`}</Text>
-                            <HStack>
-                                <EditIcon onClick={() => handleEdit(track, i)} boxSize='15px' />
-                                <CloseIcon onClick={() => handleDelete(i)} boxSize='15px' />
-                            </HStack>
-                        </VStack>
-                    </Flex>
-                </CardBody>
-            </Card>
+            //     <Card>
+            //     <CardBody>
+            //         <Flex justify={'space-between'} px='5'>
+            //             <VStack textAlign={'left'}>
+            //                 <Heading fontSize={'18'}>{category}</Heading>
+            //                 <Text textAlign={'left'} fontSize={'13'}>{new Date(date).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', year:'numeric`' })}</Text>
+            //                 <Text textAlign={'left'} fontSize={'13'}>{type.toUpperCase()}</Text>
+            //             </VStack>
+            //             <VStack>
+            //                 <Text textAlign={'left'} fontSize={'13'} color={type === 'Income' ? 'green' : 'red'}>{type === 'Income' ? `+${amount}` : `-${amount}`}</Text>
+            //                 <HStack>
+            //                     <EditIcon onClick={() => handleEdit(track, i)} boxSize='15px' />
+            //                     <CloseIcon onClick={() => handleDelete(i)} boxSize='15px' />
+            //                 </HStack>
+            //             </VStack>
+            //         </Flex>
+            //     </CardBody>
+            // </Card>
             })}
         </Box>
     )
