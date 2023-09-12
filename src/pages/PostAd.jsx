@@ -104,7 +104,7 @@ const PostAd = () => {
                 </HStack>
             </FormControl>
             <FormControl>
-                <Button mt='3' w='100%' onClick={validation} colorScheme='linkedin'>Create Classfied</Button>
+                <Button mt='3' w='100%' onClick={validation} colorScheme='purple'>Create Classfied</Button>
             </FormControl>
         </Box>
     </Box>
