@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Input,Flex, Button, Card, HStack,Select, Heading, useToast, CardBody, VStack, Text, Image, Stack, Divider, CardFooter, ButtonGroup, Grid, SimpleGrid } from '@chakra-ui/react'
+import { Box, Input,Flex, Button, Card, HStack,Select, Heading, useToast, CardBody, VStack, Text, Image, Stack, Divider, CardFooter, ButtonGroup, Grid, SimpleGrid, useDisclosure } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAds } from '../redux/actions'
+import { deleteAd, getAds } from '../redux/actions'
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
-// import {EditIcon,CloseIcon} from '@chakra-ui/icons'
+import EditComponent from '../components/EditComponent'
 const objSchema = {
     name:'',
-    sort:'',
-    category:''
+    category:'',
+    price:'',
+    location:'',
+    image:'',
+    description:'',
+    _id:'',
+    _ve:''
 }
 const Browse = () => {
     const dispatch = useDispatch()
     const ads = useSelector(store=>store.ads)
-    const [obj,setObj] = useState(objSchema) 
+    // const [obj,setObj] = useState(objSchema) 
     const toast = useToast()
     const id = 'test-toast'
     const showAlert = (text = 'Error', status = 'error') => {
@@ -25,24 +30,35 @@ const Browse = () => {
         }
     }
     const capitalise = (str) =>{
-        return str[0].toUpperCase()+str.substring(1).toLowerCase()
+        return str[0].toUpperCase()+str.substring(1)
     }
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const handleEdit = (ad) =>{
+      setObj(ad)
+      onOpen()
+    }
+    const [obj,setObj] = useState(objSchema)
+    const handleDelete = (id) =>{
+      dispatch(deleteAd(id))
+      showAlert("Ad deleted Successfully!")
+    }
+    const [options,setOptions] = useState({category:'',name:'',sort:''})
     useEffect(()=>{
-        dispatch(getAds(obj))
-    },[obj])
+        dispatch(getAds(options))
+    },[options,ads])
     return (
         <Box textAlign={'center'} px='5%'>
             <Heading m='3' >Browse Classifieds</Heading>
             <Flex m='3' gap='5'>
-            <Select value={obj.category} onChange={(e)=>setObj({...obj,category:e.target.value})}>
+            <Select value={options.category} onChange={(e)=>setOptions({...options,category:e.target.value})}>
                 <option value=''>--filter by category--</option>
                 <option value='clothing'>Clothing</option>
                 <option value='electronics'>Electronics</option>
                 <option value='furniture'>Clothing</option>
                 <option value='other'>Other</option>
             </Select>
-            <Input value={obj.name} placeholder='Search by name' onChange={(e)=>setObj({...obj,name:e.target.value})} />
-            <Select value={obj.sort} onChange={(e)=>setObj({...obj,sort:e.target.value})}>
+            <Input value={options.name} placeholder='Search by name' onChange={(e)=>setOptions({...options,name:e.target.value})} />
+            <Select value={options.sort} onChange={(e)=>setOptions({...options,sort:e.target.value})}>
                 <option value=''>--sort by date--</option>
                 <option value='asc'>Ascending</option>
                 <option value='desc'>Descending</option>
@@ -62,7 +78,8 @@ const Browse = () => {
                     <Heading size='md'>{ad.name}</Heading>
                     <Text fontSize={'sm'}>{capitalise(ad.category)}</Text>
                     <Text fontSize={'sm'}>{ad.description}</Text>
-                    <Text fontSize={'sm'}>{capitalise(ad.location)}</Text>
+                    <Text fontSize={'sm'}>Location : {capitalise(ad.location)}</Text>
+                    <Text fontSize={'sm'}>Posted On : {capitalise(ad.postedAt)}</Text>
                     <Text fontWeight={'bold'} fontSize='lg' bottom={'0'}>
                       Rs. {ad.price}/-
                     </Text>
@@ -74,10 +91,10 @@ const Browse = () => {
                     <Button variant='solid' colorScheme='purple' size={'sm'}>
                       Buy now
                     </Button>
-                    <Button variant='solid' colorScheme='purple' size={'sm'}>
+                    <Button variant='solid' onClick={()=>handleEdit(ad)} colorScheme='purple' size={'sm'}>
                         <EditIcon />
                     </Button>
-                    <Button variant='solid' colorScheme='purple' size={'sm'}>
+                    <Button variant='solid' onClick={()=>handleDelete(ad['_id'])} colorScheme='purple' size={'sm'}>
                         <DeleteIcon />
                     </Button>
                   </ButtonGroup>
@@ -85,6 +102,7 @@ const Browse = () => {
               </Card>
             })}
             </SimpleGrid>
+            <EditComponent onClose={onClose} showAlert={showAlert} onOpen={onOpen} isOpen={isOpen} obj={obj} setObj={setObj}/>
         </Box>
     )
 }
